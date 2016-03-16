@@ -4,7 +4,8 @@
         <title>Android GPS</title>
         
         <!-- Bootstrap Core CSS -->
-        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
         <!-- Custom CSS -->
         <link href="css/the-big-picture.css" rel="stylesheet">
@@ -17,11 +18,20 @@
         <style type="text/css">
            
             html, body, .container-fluid, #map {
+                padding: 0;
                 margin: 0;
             }
             /* Set a size for our map container, the Google Map will take up 100% of this container */
             #map {
                 height: 1080px;
+            }
+
+            #main-content {
+                padding: 0;
+            }
+
+            .navbar {
+                opacity: 0.85;
             }
         </style>
         
@@ -133,32 +143,29 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
     </head>
-    <body onload="init()">
+    <body class = "container-fluid" onload="init()">
 
           <!-- Navigation -->
         <nav class="navbar navbar-inverse navbar-fixed-bottom" role="navigation">
             <div class="container-fluid">
                 <!-- Brand and toggle get grouped for better mobile display -->
-                <div class="navbar-header">
+                <div class="navbar-header" style = "padding-left: 15px">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
                         <span class="sr-only">Toggle navigation</span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="#">Start Bootstrap</a>
+                    <a class="navbar-brand" href="#">Android GPS Tracker</a>
                 </div>
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav">
                         <li>
-                            <a href="#">About</a>
+                            <a href="#">Users</a>
                         </li>
                         <li>
-                            <a href="#">Services</a>
-                        </li>
-                        <li>
-                            <a href="#">Contact</a>
+                            <a href="#">Info</a>
                         </li>
                     </ul>
                 </div>
@@ -168,16 +175,15 @@
         </nav>
 
         <!-- Page Content -->
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12 col-sm-12">
+        <div id = "main-content" class="container-fluid">
+            <div class="row-fluid">
+                <div class="col-md-12 col-sm-12" style = "padding:0">
                     <div id="map"></div>
                 </div>
             </div>
             <!-- /.row -->
         </div>
         <!-- /.container -->
-
         <!-- jQuery -->
         <script src="js/jquery.js"></script>
 
