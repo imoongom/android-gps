@@ -1,27 +1,36 @@
+/*------------------------------------------------------------------------------------------------------------------
+-- SOURCE FILE: udps_sql.java - An application that will listen for datagrams
+-- from the Android GPS app and update the database.
+--
+-- PROGRAM: udps_sql
+--
+-- FUNCTIONS:
+-- public udps_sql(int port)
+-- public void run()
+-- public static void main (String [] args)
+--
+-- DATE: March 16, 2016
+--
+-- REVISIONS: 
+--    March 16, 2016 - File created. Implement basic Java server.
+--    March 20, 2016 - Fix JDBC driver dependency.  
+--    March 20, 2016 - Comments added for the functions.
+--
+-- DESIGNER: Krystle Bulalakaw, Oscar Kwan, Gabriel Lee, Eunwon Moon
+--
+-- PROGRAMMER: Eunwon Moon, Gabriel Lee
+--
+-- NOTES:
+-- The UDP server that gets the clients' data and updates the database with it 
+-- before echoing back the data to the client.
+-- Creates a thread to run the main loop that receives the datagrams.
+----------------------------------------------------------------------------------------------------------------------*/
 package udps_sql;
 
 import java.net.*;
 import java.io.*;
 import java.sql.*;
 
-/**
-* 
-* Program: udps_sql
-* 
-* Description:
-* 	The UDP server that gets the clients' data and updates the database with it 
-* 	before echoing back the data to the client.
-* 
-* Functions: 
-* 	public udps_sql(int port)
-* 	public void run()
-* 	public static void main (String [] args)
-* 
-* Revision:
-* 	March 20, 2016 - Fix JDBC driver dependency.  
-* 	March 20, 2016 - Comments added for the functions.
-*
-*/
 public class udps_sql extends Thread
 {
 	String ClientString;
@@ -36,27 +45,60 @@ public class udps_sql extends Thread
 	static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";  
 	static final String DB_URL = "jdbc:mysql://127.0.0.1:3306/androidgps";
 	
-	//  Database credentials
+	// Database credentials
 	static final String USER = "root";
 	static final String PASS = "aman";
 	
-	/**
-	* The constructor for the udps_sql class. Creates a listening socket with 
-	* the given port and set the socket timeout.
-	* @param port the port number to connect 
-	* @throws IOException
-	*/
+	/*------------------------------------------------------------------------------------------------------------------
+    -- FUNCTION: udps_sql
+    --
+    -- DATE: March 16, 2016
+    --
+    -- REVISIONS: 
+    --    March 16, 2016 - File created.
+    --    March 20, 2016 - Comments added for the functions.
+    --
+    -- DESIGNER: Krystle Bulalakaw, Oscar Kwan, Gabriel Lee, Eunwon Moon
+    --
+    -- PROGRAMMER: Eunwon Moon, Gabriel Lee
+    --
+    -- INTERFACE: public udps_sql(int port)
+    -- int port: the port number to use when running the server
+    --
+    -- RETURNS: n/a
+    --
+    -- NOTES:
+    -- The constructor for the udps_sql class. Creates a listening socket with 
+	-- the given port and set the socket timeout.
+    ----------------------------------------------------------------------------------------------------------------------*/
 	public udps_sql(int port) throws IOException
 	{
 		ListeningSocket = new DatagramSocket (port);
 		ListeningSocket.setSoTimeout(100000); // set a 20 second timeout
 	}
 	
-	/**
-	* The code to execute in the thread. A UDP server that listens for 
-	* datagrams and echoes it back to the client. It updates the database
-	* from the client's data before the echo.
-	*/
+	/*------------------------------------------------------------------------------------------------------------------
+    -- FUNCTION: run
+    --
+    -- DATE: March 16, 2016
+    --
+    -- REVISIONS: 
+    --    March 16, 2016 - File created.
+    --    March 20, 2016 - Comments added for the functions.
+    --
+    -- DESIGNER: Krystle Bulalakaw, Oscar Kwan, Gabriel Lee, Eunwon Moon
+    --
+    -- PROGRAMMER: Eunwon Moon, Gabriel Lee
+    --
+    -- INTERFACE: public void run()
+    --
+    -- RETURNS: void
+    --
+    -- NOTES:
+    -- The code to execute in the thread. A UDP server that listens for 
+	-- datagrams and echoes it back to the client. It updates the database
+	-- from the client's data before the echo.
+    ----------------------------------------------------------------------------------------------------------------------*/
 	public void run()
 	{
 		while(true)
@@ -136,18 +178,36 @@ public class udps_sql extends Thread
 			se.printStackTrace();
 		}
 	}
-	
-	/**
-	* The main entry point for the application.
-	* Opens the connections to the database so that the runnable thread can
-	* update the database with the data from the client.
-	* @param args command-line arguments
-	*/
+    
+    /*------------------------------------------------------------------------------------------------------------------
+    -- FUNCTION: main
+    --
+    -- DATE: March 16, 2016
+    --
+    -- REVISIONS: 
+    --    March 16, 2016 - File created.
+    --    March 20, 2016 - Fix JDBC driver dependency.
+    --    March 20, 2016 - Comments added for the functions.
+    --
+    -- DESIGNER: Krystle Bulalakaw, Oscar Kwan, Gabriel Lee, Eunwon Moon
+    --
+    -- PROGRAMMER: Eunwon Moon, Gabriel Lee
+    --
+    -- INTERFACE: public static void main (String [] args)
+    -- String [] args: command-line arguments (used to get the port number)
+    --
+    -- RETURNS: void
+    --
+    -- NOTES:
+    -- The main entry point for the application.
+	-- Opens the connections to the database so that the runnable thread can
+	-- update the database with the data from the client.
+    ----------------------------------------------------------------------------------------------------------------------*/
 	public static void main (String [] args)
 	{
 		if(args.length != 1)
 		{
-			System.out.println("Usage Error : java udps <port>");
+			System.out.println("Usage Error : java udps_sql <port>");
 			System.exit(0);
 		}   
 		int port = Integer.parseInt(args[0]);
