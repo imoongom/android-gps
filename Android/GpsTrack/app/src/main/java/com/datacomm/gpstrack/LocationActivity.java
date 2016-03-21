@@ -310,10 +310,10 @@ public class LocationActivity extends FragmentActivity implements OnMapReadyCall
                     if(curLoc == null)
                         continue;
                     if(prevLoc == null){
-                        String latStr = String.format("%.08f", curLoc.getLatitude());
-                        String lngStr = String.format("%.08f", curLoc.getLongitude());
-                        publishProgress(curLoc);
-                        socketNtw.send(latStr, lngStr, CltName, ipAddress);
+                       // String latStr = String.format("%.08f", curLoc.getLatitude());
+                       // String lngStr = String.format("%.08f", curLoc.getLongitude());
+                       // publishProgress(curLoc);
+                      //  socketNtw.send(latStr, lngStr, CltName, ipAddress);
                         prevLoc = curLoc;
                     }
                     else if(cnt ==0 || (prevLoc.getLatitude() != curLoc.getLatitude() || prevLoc.getLongitude()!=curLoc.getLongitude())) {

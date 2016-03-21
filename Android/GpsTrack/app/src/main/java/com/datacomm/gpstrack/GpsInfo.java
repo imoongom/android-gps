@@ -134,6 +134,8 @@ public class GpsInfo extends Service implements LocationListener {
             cr.setAccuracy(Criteria.ACCURACY_COARSE);
             String providerCoarse = locManager.getBestProvider(cr, true);
 
+            if(!GPSEnabled)
+                showSettingsAlert();
 
             if(provider!=null && !provider.equals("")){
                 this.GetLocationEnabled = true;
