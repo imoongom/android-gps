@@ -7,8 +7,7 @@ root directory: /android-gps/
  - README.md
 
 Android application:    /Android/
- - Source code:         /GpsTrack/ 
- - .apk :               app-release.apk
+ - .apk :               /Android/app-release.apk
 
 Server application:     /Server/
  - Source code:         /src/udps_sql/udps_sql.java
