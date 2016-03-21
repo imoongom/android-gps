@@ -55,7 +55,7 @@ import java.nio.ByteOrder;
 ----------------------------------------------------------------------------------------------------------------------*/
 public class GpsInfo extends Service implements LocationListener {
     private static final long MIN_DISTANCE_UPDATES = 1;
-    private static final long MIN_TIME_UPDATES =  5000;
+    private static final long MIN_TIME_UPDATES =  10000;
 
     private final Context mContext;
     boolean GPSEnabled = false;
