@@ -30,7 +30,7 @@ FROM markers m
 JOIN users u
 ON m.name = u.user_name
 JOIN colours c
-on u.colour = c.name";
+on u.colour = c.colour";
 $result = mysql_query($query);
 if (!$result) {
  die('Invalid query: ' . mysql_error());
@@ -47,10 +47,10 @@ while ($row = @mysql_fetch_assoc($result)){
  echo '<marker ';
  echo 'name="' . parseToXML($row['name']) . '" ';
  echo 'colour="' . $row['colour'] . '" ';
- echo 'address="' . parseToXML($row['address']) . '" ';
  echo 'lat="' . $row['lat'] . '" ';
  echo 'lng="' . $row['lng'] . '" ';
- echo 'type="' . $row['type'] . '" ';
+ echo 'ip="' . $row['ip'] . '" ';
+ echo 'id="' . $row['id'] . '" ';
  echo '/>';
 }
 
