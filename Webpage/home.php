@@ -181,7 +181,7 @@ $userRow=mysql_fetch_array($res);
                 <img src = "img/closebt.svg">
             </div>
                 
-            <div class="modal-content" style = "font-size: 30px; ">
+            <div class="modal-content" style = "font-size: 30px; text-align: center;">
                 <!--Your modal content goes here-->
                 <h1>Users</h1>
                 <?php
