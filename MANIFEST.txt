@@ -5,7 +5,6 @@ Details of zipped package
 root directory: /android-gps/ 
  - MANIFEST.txt
  - README.md
- - UserGuide.pdf
 
 Android application:    /Android/
  - Source code:         /GpsTrack/ 
@@ -22,7 +21,7 @@ Web application:        /Webpage/
  - fonts:               /fonts/
  - images/icons:        /img/
 
-Design documentation:   /Design/
- - StateDiagram.pdf
- - Pseudocode.pdf
+Documentation:          /Documentation/
+ - DesignDocument.pdf
  - Testing.pdf
+ - UserGuide.pdf
