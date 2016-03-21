@@ -109,9 +109,9 @@
                 android:textIsSelectable="false"
                 android:singleLine="true"
                 android:layout_weight="1"
-                android:inputType="number"
-                android:digits="0123456789."
-                android:text="51234" />
+                android:digits="0123456789"
+                android:text="51234"
+                android:inputType="numberDecimal" />
 
         </LinearLayout>
 

@@ -115,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
                 if(!checkInput()){
                     return;
                 }
+
                 i.putExtra("name", nameStr);
                 i.putExtra("ip", ipStr);
                 i.putExtra("port", portNum);
@@ -148,9 +149,11 @@ public class MainActivity extends AppCompatActivity {
     private boolean checkInput(){
         nameStr = nameEdit.getText().toString();
         ipStr = ipEdit.getText().toString();
-        portNum = Integer.parseInt(portEdit.getText().toString());
+
+
+
         Log.e("CHECK INOUT", "check start");
-        if(nameStr.equals("")){
+        if(nameStr.equals("")|| ipStr.equals("") || portEdit.getText().toString().equals("")){
             errMsg.setText("Please fill out the form.");
             Log.e("CHECK INOUT", "emptyspace");
             return false;
@@ -169,10 +172,13 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-        if(portNum <0 || portNum > 65546){
+        //default port number is null
+        portNum = Integer.parseInt(portEdit.getText().toString());
+        if (portNum < 0 || portNum > 65546) {
             errMsg.setText("Please check port number");
             return false;
         }
+
         return true;
     }
     /*------------------------------------------------------------------------------------------------------------------
