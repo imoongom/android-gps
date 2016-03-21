@@ -1,0 +1,23 @@
+UDP Server
+
+Main
+    Check command-line arguments for port number
+    Load JDBC driver
+    Attempt to establish connection to the database
+    Create a thread for the server 
+    Run the server class 
+    
+Server Constructor
+    Create the datagram socket for data from the clients
+    Set timeout for the socket 
+
+Server Run
+    Run until the socket timeout
+        Listen for datagrams from clients
+        Get the client address and port from the datagram
+        Parse client data
+        Update the database with the client's data
+        Echo back to the client with the client's data
+    If the socket timeout
+        Close the datagram socket
+        Close the connection to the database.
