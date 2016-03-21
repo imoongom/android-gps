@@ -102,7 +102,7 @@ public class LocationActivity extends FragmentActivity implements OnMapReadyCall
     --
     -- DESIGNER: Eunwon Moon
     --
-    -- PROGRAMMER: Eunwon Moon
+    -- PROGRAMMER: Eunwon Moon, Krystle Bulalakaw
     --
     -- INTERFACE: void initVal()
     --

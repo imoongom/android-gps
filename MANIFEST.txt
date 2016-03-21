@@ -1,0 +1,28 @@
+COMP 4985 - Android GPS Tracker
+
+Details of zipped package
+
+root directory: /android-gps/ 
+ - MANIFEST.txt
+ - README.md
+ - UserGuide.pdf
+
+Android application:    /Android/
+ - Source code:         /GpsTrack/ 
+ - .apk :               app-release.apk
+
+Server application:     /Server/
+ - Source code:         /src/udps_sql/udps_sql.java
+ - Runnable JAR:        /lib/mysql-connector-java-5.1.38-bin.jar
+
+Web application:        /Webpage/
+ - Source code:         *.php
+ - JavaScript:          /js/
+ - CSS:                 /css/
+ - fonts:               /fonts/
+ - images/icons:        /img/
+
+Design documentation:   /Design/
+ - StateDiagram.pdf
+ - Pseudocode.pdf
+ - Testing.pdf
