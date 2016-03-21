@@ -51,6 +51,15 @@ $userRow=mysql_fetch_array($res);
             .navbar {
                 opacity: 0.85;
             }
+            table {
+                width: 100%;
+            }
+            th {
+                text-align: center;
+            }
+            th, td {
+                border-bottom: 1px solid #ddd;
+            }
         </style>
         
         <!-- 
@@ -214,6 +223,13 @@ $userRow=mysql_fetch_array($res);
                     }
 
 					echo '<table style = "text-align:center">';
+                    echo '<tr>
+                            <th>Timestamp</th>
+                            <th>Name</th>
+                            <th>Latitude</th>
+                            <th>Longitude</th>
+                            <th>IP Address</th>
+                          </tr>';
                     while ($row = mysql_fetch_array($result)) {
 						echo '<tr>';
                         echo '<td>' . $row['id'] . '</td>';
