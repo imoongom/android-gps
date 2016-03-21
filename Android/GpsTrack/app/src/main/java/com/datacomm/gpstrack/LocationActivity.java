@@ -163,15 +163,18 @@ public class LocationActivity extends FragmentActivity implements OnMapReadyCall
                         prevLoc = curLoc;
                     }
                     else if(cnt ==0 || (prevLoc.getLatitude() != curLoc.getLatitude() || prevLoc.getLongitude()!=curLoc.getLongitude())) {
-                        cnt = 30;
+                        cnt = 10;
 
+                        String latStr = String.format("%.5f", curLoc.getLatitude());
+                        String lngStr = String.format("%.5f", curLoc.getLongitude());
+/*
                         String latStr = Double.toString(curLoc.getLatitude());
                         String lngStr = Double.toString(curLoc.getLongitude());
-
+*/
                         //send locationvariable to onProgressUpdate
                         publishProgress(curLoc);
-
-                        socketNtw.send(latStr, lngStr, CltName);
+                       // if(GpsInfo.getNetwork())
+                            socketNtw.send(latStr, lngStr, CltName);
                         prevLoc = curLoc;
                     }
                     else {
@@ -180,7 +183,7 @@ public class LocationActivity extends FragmentActivity implements OnMapReadyCall
 
                     //wait for a second.
                     try {
-                        Thread.sleep(1000);
+                        Thread.sleep(3000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

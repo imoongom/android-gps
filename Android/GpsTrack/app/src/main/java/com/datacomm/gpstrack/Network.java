@@ -51,10 +51,11 @@ public class Network {
 
     //Packetize and Send;
     public void send(String lat, String lng, String name) {
-        ClientString = new String("["+name + "]: " + lat + ", "+ lng);
+    //    ClientString = null;
+        ClientString = new String("<marker name = \""+ name + "\" lat = \"" + lat + "\" lng =\""+ lng + "\"/>");
 //        ClientString = createPacket(lat, lng, name);
         System.arraycopy(ClientString.getBytes(), 0, PacketData, 0, ClientString.length());
-
+        Log.e("SEND CHECK", ClientString);
         // Create the complete datagram
         dgram = new DatagramPacket(PacketData, PacketData.length, Addr, ServerPort);
 

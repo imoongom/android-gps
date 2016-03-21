@@ -24,12 +24,12 @@ import android.widget.Toast;
 
 
 public class GpsInfo extends Service implements LocationListener {
-    private static final long MIN_DISTANCE_UPDATES = 1;
-    private static final long MIN_TIME_UPDATES = 1000;
+    private static final long MIN_DISTANCE_UPDATES = 2;
+    private static final long MIN_TIME_UPDATES = 3000;
 
     private final Context mContext;
     boolean GPSEnabled = false;
-    boolean NetworkEnabled = false;
+    static boolean NetworkEnabled = false;
     boolean GetLocationEnabled = false;
 
     private Location mylocation;
@@ -118,7 +118,9 @@ public class GpsInfo extends Service implements LocationListener {
             locManager.removeUpdates(GpsInfo.this);
         }
     }
-
+    public static boolean getNetwork(){
+        return NetworkEnabled;
+    }
     //return current location
     public Location getLatLng(){
         return mylocation;
