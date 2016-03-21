@@ -11,10 +11,12 @@ if(isset($_POST['btn-signup']))
 	$uname = mysql_real_escape_string($_POST['uname']);
 	$email = mysql_real_escape_string($_POST['email']);
 	$upass = md5(mysql_real_escape_string($_POST['pass']));
+	$colour = mysql_real_escape_string($_POST['colour']);
 	
 	$uname = trim($uname);
 	$email = trim($email);
 	$upass = trim($upass);
+	$colour = trim($colour);
 	
 	// email exist or not
 	$query = "SELECT user_email FROM users WHERE user_email='$email'";
@@ -24,7 +26,7 @@ if(isset($_POST['btn-signup']))
 	
 	if($count == 0){
 		
-		if(mysql_query("INSERT INTO users(user_name,user_email,user_pass) VALUES('$uname','$email','$upass')"))
+		if(mysql_query("INSERT INTO users(user_name,user_email,user_pass,colour) VALUES('$uname','$email','$upass','$colour')"))
 		{
 			?>
 			<script>alert('successfully registered ');</script>
@@ -75,6 +77,13 @@ if(isset($_POST['btn-signup']))
 						</label>
 					</span>
 			</section>
+			<select name="colour">
+				<option value="red">Red</option>
+				<option value="blue">Blue</option>
+				<option value="purple">Purple</option>
+				<option value="yellow">Yellow</option>
+				<option value="green">Green</option>
+			</select>
 		<button style = "margin-top: -35px" type = "submit" name="btn-signup" class="btn btn-2 btn-2a">Sign Up</button>
 		</form>
 		<a href="index.php">Sign In Here</a>

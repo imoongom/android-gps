@@ -53,7 +53,7 @@ public class Network {
     public void send(String lat, String lng, String name) {
     //    ClientString = null;
         ClientString = new String("<marker name = \""+ name + "\" lat = \"" + lat + "\" lng =\""+ lng + "\"/>");
-//        ClientString = createPacket(lat, lng, name);
+        ClientString = createPacket(lat, lng, name);
         System.arraycopy(ClientString.getBytes(), 0, PacketData, 0, ClientString.length());
         Log.e("SEND CHECK", ClientString);
         // Create the complete datagram
@@ -73,8 +73,7 @@ public class Network {
 
     //create packet and call
     public String createPacket(String lat, String lng, String name){
-        return new String("INSERT INTO 'markers' ('name', 'lat', 'lng') VALUES ('"+ name +
-                "', '" + lat + "', '" + lng + "'");
+       return new String("INSERT INTO `markers`(`name`, `lat`, `lng`) VALUES ('"+name+"',"+lat+","+lng+");");
     }
 
 }
