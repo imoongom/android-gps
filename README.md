@@ -18,7 +18,7 @@ Location finding Android app that communicates to an Apache web server via TCP/I
   - Contains the web application files to view all GpsTrack clients on Google Maps.
   - Source code in HTML and PHP to connect to database (registration, login, user-specific data).
   - Additional fonts, images, CSS and JavaScript libraries for UI.
--Documentation
+- Documentation
   - Design work (state diagrams and pseudocode)
   - Test Report
   - User Guide
