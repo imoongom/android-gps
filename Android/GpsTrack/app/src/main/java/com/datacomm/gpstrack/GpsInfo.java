@@ -88,8 +88,8 @@ public class GpsInfo extends Service implements LocationListener {
     --
     -- NOTES:
     -- check GPS and network provider if it is working or not.
-    -- If GPS is working, update using gps information.
-    -- Otherwise, use NetworkProvider to update location.
+    -- using Criteria, get more accurate information and or coarse information
+    -- in case ACCURATE_FINE is not working.
     --
     ----------------------------------------------------------------------------------------------------------------------*/
     //start to get location
@@ -113,7 +113,7 @@ public class GpsInfo extends Service implements LocationListener {
             Log.e("CHECK", "getLoc");
             Criteria cr = new Criteria();
 
-            cr.setPowerRequirement(Criteria.POWER_HIGH);
+            cr.setPowerRequirement(Criteria.POWER_MEDIUM);
             cr.setAltitudeRequired(true);
             cr.setSpeedRequired(true);
             cr.setCostAllowed(true);
