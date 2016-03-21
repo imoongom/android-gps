@@ -143,7 +143,7 @@ public class Network {
     --
     -- DESIGNER: Eunwon, Krystle, Oscar, Gabriel
     --
-    -- PROGRAMMER: Eunwon Moon
+    -- PROGRAMMER: Eunwon Moon, Krystle Bulalakaw
     --
     -- INTERFACE: String createPacket(String lat, String lng, String name, String ipAddress)
     --					String lat  : latitude value
