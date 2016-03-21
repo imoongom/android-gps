@@ -17,7 +17,35 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-
+/*------------------------------------------------------------------------------------------------------------------
+-- SOURCE FILE: LocationActivity.java
+--
+-- PROGRAM: AndroidGpsTrack
+--
+-- FUNCTIONS:
+-- void onCreate(Bundle savedInstanceState)
+-- void initVal()
+-- void onMapReady(GoogleMap googleMap)
+-- void drawMarker(Location loc)
+-- class MapUpdate extends AsyncTask<String, Location, Location>
+--    protected Location doInBackground(Void)
+--    protected void onProgressUpdate(Location... loc)
+--
+-- DATE: March 8, 2016
+--
+-- REVISIONS: Add AsyncTask to keep updating location - March 9, 2016
+--
+-- DESIGNER:  Eunwon, Krystle, Oscar, Gabriel
+--
+-- PROGRAMMER: Eunwon Moon
+--
+-- NOTES: This program will be tracking and connecting screen of android application
+--   using MainActivity input value, connect socket, update location information
+--   and send to server.
+--   Using GoogleMap fragment, display my current location.
+--   location tracking keep updating using AsyncTask.
+--
+----------------------------------------------------------------------------------------------------------------------*/
 public class LocationActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
@@ -32,6 +60,26 @@ public class LocationActivity extends FragmentActivity implements OnMapReadyCall
     String ipAddress;
     GpsInfo gpsInfo;
 
+    /*------------------------------------------------------------------------------------------------------------------
+    -- FUNCTION: onCreate
+    --
+    -- DATE: March 8, 2016
+    --
+    -- REVISIONS: (Date and Description)
+    --
+    -- DESIGNER: Eunwon Moon
+    --
+    -- PROGRAMMER: Eunwon Moon
+    --
+    -- INTERFACE: void onCreate(Bundle savedInstanceState)
+    --            saveInstanceState :
+    --
+    -- RETURNS: void
+    --
+    -- NOTES:
+    -- This function is used to show xml file, and add mapfragment to get map
+    -- Asynchronously.
+    ----------------------------------------------------------------------------------------------------------------------*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +93,29 @@ public class LocationActivity extends FragmentActivity implements OnMapReadyCall
     }
 
 
-    //initialize xml file view and button work
+    /*------------------------------------------------------------------------------------------------------------------
+    -- FUNCTION: initVal
+    --
+    -- DATE: March 8, 2016
+    --
+    -- REVISIONS: (Date and Description)
+    --
+    -- DESIGNER: Eunwon Moon
+    --
+    -- PROGRAMMER: Eunwon Moon
+    --
+    -- INTERFACE: void initVal()
+    --
+    -- RETURNS: void
+    --
+    -- NOTES:
+    -- This function is used to initialize global values.
+    -- Receive input values from previous page using intent
+    -- and initialize boolean values to control each options.
+    -- Also declare other java class values to get location and Connect to server
+    -- This function initialize all information related to xml display and button listener.
+    ----------------------------------------------------------------------------------------------------------------------*/
+
     public void initVal()  {
         gpsInfo = new GpsInfo(getApplicationContext());
         //get input value from main page
@@ -102,17 +172,26 @@ public class LocationActivity extends FragmentActivity implements OnMapReadyCall
         });
     }
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
-
-    //initialize map
+    /*------------------------------------------------------------------------------------------------------------------
+    -- FUNCTION: onMapReady
+    --
+    -- DATE: March 8, 2016
+    --
+    -- REVISIONS: (Date and Description)
+    --
+    -- DESIGNER: Eunwon Moon
+    --
+    -- PROGRAMMER: Eunwon Moon
+    --
+    -- INTERFACE: void onMapReady(GoogleMap googleMap)
+    --                  googleMap : GoogleMap display using API
+    --
+    -- RETURNS: void
+    --
+    -- NOTES:
+    --  This function is neccesary by implementing OnMapReadyCallback.
+    --  Initialize google map and default map view
+    ----------------------------------------------------------------------------------------------------------------------*/
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -121,6 +200,26 @@ public class LocationActivity extends FragmentActivity implements OnMapReadyCall
     }
 
 
+    /*------------------------------------------------------------------------------------------------------------------
+    -- FUNCTION: drawMarker
+    --
+    -- DATE: March 8, 2016
+    --
+    -- REVISIONS: (Date and Description)
+    --
+    -- DESIGNER: Eunwon Moon
+    --
+    -- PROGRAMMER: Eunwon Moon
+    --
+    -- INTERFACE: void drawMarker(Location loc)
+    --                 loc : the location information to add marker in map
+    --
+    -- RETURNS: void
+    --
+    -- NOTES:
+    -- This function is to add location marker using location information.
+    -- also move the display of map to show current location on the map.
+    ----------------------------------------------------------------------------------------------------------------------*/
 
     private void drawMarker(Location loc){
         LatLng curPosition = new LatLng(loc.getLatitude(), loc.getLongitude());
@@ -142,30 +241,86 @@ public class LocationActivity extends FragmentActivity implements OnMapReadyCall
 
 
 
-    /*
-      map update thread
-      get location every 1 second
-      compare new location to previous location.
-      If it is same, not update.
-      If not update 30 times, just update same spot again.
-    */
-    private class MapUpdate extends AsyncTask<String, Location, Location> {
-        int cnt =  30;
+    /*------------------------------------------------------------------------------------------------------------------
+    -- CLASS: MapUpdate
+    --
+    -- FUNCTIONS:
+    -- void onCreate(Bundle savedInstanceState)
+    -- void initVal()
+    -- void onMapReady(GoogleMap googleMap)
+    -- void drawMarker(Location loc)
+    -- class MapUpdate extends AsyncTask<String, Location, Location>
+    --    protected Location doInBackground(Void)
+    --    protected void onProgressUpdate(Location... loc)
+    --
+    -- DATE: March 9, 2016
+    --
+    -- REVISIONS: (Date and Description)
+    --
+    -- DESIGNER: Eunwon, Krystle, Oscar, Gabriel
+    --
+    -- PROGRAMMER: Eunwon Moon
+    --
+    -- INTERFACE: extend AsyncTask<Null, Location, Null>
+    --            Location will be used for onProgressUpdate to change XML display
+    --
+    -- RETURNS: void
+    --
+    -- NOTES:
+    -- This class is sub-class of location activity to update location information
+    -- Asynchronously. By implementing AsyncTask, override doInBackground
+    -- and onProgressUpdate functions.
+    --
+    ----------------------------------------------------------------------------------------------------------------------*/
+    private class MapUpdate extends AsyncTask<Void, Location, Void> {
+        int cnt =  5;
         Location curLoc;
 
+
+
+        /*------------------------------------------------------------------------------------------------------------------
+        -- Function: doInBackround
+        --
+        -- DATE: March 9, 2016
+        --
+        -- REVISIONS: (Date and Description)
+        --
+        -- DESIGNER: Eunwon, Krystle, Oscar, Gabriel
+        --
+        -- PROGRAMMER: Eunwon Moon
+        --
+        -- INTERFACE: Location doInBackground(Void... params)
+        --            Location will be last locatin
+        --
+        -- RETURNS: void
+        --
+        -- NOTES:
+        -- This function will keep running until close the application.
+        -- However, receiving update information when user start.
+        -- get recent location information using GpsInfo class and check marker
+        -- If the gps is in the same location, deduct count value instead of update information.
+        -- If the user locate same spot until count become 0, just send same location info.
+        -- the data will be update every 10 seconds.
+        ----------------------------------------------------------------------------------------------------------------------*/
         @Override
-        protected Location doInBackground(String... params) {
+        protected Void doInBackground(Void... params) {
             while(true) {
                 if (start) {
                     curLoc = gps.getLatLng();
+                    if(curLoc == null)
+                        continue;
                     if(prevLoc == null){
+                        String latStr = String.format("%.08f", curLoc.getLatitude());
+                        String lngStr = String.format("%.08f", curLoc.getLongitude());
+                        publishProgress(curLoc);
+                        socketNtw.send(latStr, lngStr, CltName, ipAddress);
                         prevLoc = curLoc;
                     }
                     else if(cnt ==0 || (prevLoc.getLatitude() != curLoc.getLatitude() || prevLoc.getLongitude()!=curLoc.getLongitude())) {
-                        cnt = 10;
+                        cnt = 5;
 
-                        String latStr = String.format("%.5f", curLoc.getLatitude());
-                        String lngStr = String.format("%.5f", curLoc.getLongitude());
+                        String latStr = String.format("%.08f", curLoc.getLatitude());
+                        String lngStr = String.format("%.08f", curLoc.getLongitude());
 
                         publishProgress(curLoc);
                         socketNtw.send(latStr, lngStr, CltName, ipAddress);
@@ -177,7 +332,7 @@ public class LocationActivity extends FragmentActivity implements OnMapReadyCall
 
                     //wait for a second.
                     try {
-                        Thread.sleep(3000);
+                        Thread.sleep(10000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -186,7 +341,26 @@ public class LocationActivity extends FragmentActivity implements OnMapReadyCall
             }
         }
 
-        //update XML view
+        /*------------------------------------------------------------------------------------------------------------------
+        -- Function: onProgressUpdate
+        --
+        -- DATE: March 9, 2016
+        --
+        -- REVISIONS: (Date and Description)
+        --
+        -- DESIGNER: Eunwon, Krystle, Oscar, Gabriel
+        --
+        -- PROGRAMMER: Eunwon Moon
+        --
+        -- INTERFACE: void onProgressUpdate(Location... loc)
+        --            loc : current location data from doInBackground
+        -- RETURNS:   void
+        --
+        -- NOTES:
+        -- This function will update XML textView and add marker on the map.
+        -- The data will be sent from doInBackground
+        --
+        ----------------------------------------------------------------------------------------------------------------------*/
         @Override
         protected void onProgressUpdate(Location... loc){
             Location myloc = loc[0];
@@ -206,12 +380,6 @@ public class LocationActivity extends FragmentActivity implements OnMapReadyCall
             }
         }
 
-        @Override
-        protected void onPostExecute(Location loc){
-            if(loc != null) {
-               //close socket?!?!
-            }
-        }
     }
 
 

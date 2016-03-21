@@ -27,10 +27,35 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteOrder;
 
-
+/*------------------------------------------------------------------------------------------------------------------
+-- SOURCE FILE: GpsInfo.java
+--
+-- PROGRAM: AndroidGpsTrack
+--
+-- FUNCTIONS:
+-- void getLocation()
+-- String getWifiIpAddress(Context context)
+-- void stopUsingGPS()
+-- boolean isGetLocation()
+-- void onLocationChanged(Location location)
+-- void onStatusChanged(String provider, int status, Bundle extras)
+--
+--
+-- DATE: March 9, 2016
+--
+-- REVISIONS:
+--
+-- DESIGNER:  Eunwon, Krystle, Oscar, Gabriel
+--
+-- PROGRAMMER: Eunwon Moon
+--
+-- NOTES: This program will get location information using either GPS or NetworkProvider
+-- first check if the location setting is on, and check location using gps or network provider
+--
+----------------------------------------------------------------------------------------------------------------------*/
 public class GpsInfo extends Service implements LocationListener {
-    private static final long MIN_DISTANCE_UPDATES = 2;
-    private static final long MIN_TIME_UPDATES = 3000;
+    private static final long MIN_DISTANCE_UPDATES = 1;
+    private static final long MIN_TIME_UPDATES =  5000;
 
     private final Context mContext;
     boolean GPSEnabled = false;
@@ -46,6 +71,27 @@ public class GpsInfo extends Service implements LocationListener {
         this.mContext = c;
     }
 
+    /*------------------------------------------------------------------------------------------------------------------
+    -- Function: getLocation
+    --
+    -- DATE: March 9, 2016
+    --
+    -- REVISIONS: (Date and Description)
+    --
+    -- DESIGNER: Eunwon, Krystle, Oscar, Gabriel
+    --
+    -- PROGRAMMER: Eunwon Moon
+    --
+    -- INTERFACE: void getLocation()
+    --
+    -- RETURNS:   void
+    --
+    -- NOTES:
+    -- check GPS and network provider if it is working or not.
+    -- If GPS is working, update using gps information.
+    -- Otherwise, use NetworkProvider to update location.
+    --
+    ----------------------------------------------------------------------------------------------------------------------*/
     //start to get location
     public void getLocation() {
         //permission check
@@ -61,52 +107,78 @@ public class GpsInfo extends Service implements LocationListener {
             locManager = (LocationManager)mContext.getSystemService(Context.LOCATION_SERVICE);
             locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,MIN_TIME_UPDATES,MIN_DISTANCE_UPDATES,this);
             GPSEnabled = locManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            locManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,MIN_TIME_UPDATES,MIN_DISTANCE_UPDATES,this);
             NetworkEnabled = locManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
             Log.e("CHECK", "getLoc");
             Criteria cr = new Criteria();
 
-            String provider = locManager.getBestProvider(cr, false);
+            cr.setPowerRequirement(Criteria.POWER_HIGH);
+            cr.setAltitudeRequired(true);
+            cr.setSpeedRequired(true);
+            cr.setCostAllowed(true);
+            cr.setBearingRequired(true);
 
-            //if GPS turned off
-            if (!GPSEnabled) {
-                showSettingsAlert();
-            }
+            //API level 9 and up
+            cr.setHorizontalAccuracy(Criteria.ACCURACY_HIGH);
+            cr.setVerticalAccuracy(Criteria.ACCURACY_HIGH);
+            cr.setBearingAccuracy(Criteria.ACCURACY_LOW);
+            cr.setSpeedAccuracy(Criteria.ACCURACY_MEDIUM);
 
-            //if any one possible to read
-            if (GPSEnabled || NetworkEnabled) {
+            cr.setAccuracy(Criteria.ACCURACY_FINE);
+            String provider = locManager.getBestProvider(cr, true);
+            cr.setAccuracy(Criteria.ACCURACY_COARSE);
+            String providerCoarse = locManager.getBestProvider(cr, true);
+
+
+            if(provider!=null && !provider.equals("")){
                 this.GetLocationEnabled = true;
-
-                //gps is priority
-                if (GPSEnabled) {
+                if (GPSEnabled || NetworkEnabled) {
                     Log.e("CHECK", "GPS ENABLE");
                     if (mylocation == null) {
-                        locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_UPDATES, MIN_DISTANCE_UPDATES, this);
+                        locManager.requestLocationUpdates(provider, MIN_TIME_UPDATES, MIN_DISTANCE_UPDATES, this);
                         if (locManager != null) {
-                            mylocation = locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                            mylocation = locManager.getLastKnownLocation(provider);
                         }
                     }
-                }
-                //if gps cannot get value try network provider
-                if ((!GPSEnabled || mylocation==null) && NetworkEnabled) {
-                    Log.e("CHECK", "reqLoc NW");
-                    locManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME_UPDATES, MIN_DISTANCE_UPDATES, this);
-                    if (locManager == null) {
-                        mylocation = locManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                    if(mylocation == null)
+                    {
+
+                        locManager.requestLocationUpdates(providerCoarse, MIN_TIME_UPDATES, MIN_DISTANCE_UPDATES, this);
+                        if (locManager == null) {
+                            mylocation = locManager.getLastKnownLocation(providerCoarse);
+                        }
+
                     }
                 }
-            }
-            else if(provider!=null && !provider.equals("")){
-                mylocation = locManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                locManager.requestLocationUpdates(provider, MIN_DISTANCE_UPDATES, MIN_TIME_UPDATES, this);
-            }
 
+            }
         } catch (Exception e) {
             e.printStackTrace();
 
         }
     }
-
+    /*------------------------------------------------------------------------------------------------------------------
+    -- Function: getWifiIpAddress
+    --
+    -- DATE: March 19, 2016
+    --
+    -- REVISIONS: (Date and Description)
+    --
+    -- DESIGNER: Eunwon, Krystle, Oscar, Gabriel
+    --
+    -- PROGRAMMER: Krystle Bulalakaw
+    --
+    -- INTERFACE: String getWifiIpAddress(Context context)
+    --
+    -- RETURNS:   String
+    --                    -- return this device IP address
+    --
+    -- NOTES:
+    --  This function is used to get Wifi IP address.
+    --  Get ip address using wifiManager, and convert its into a byte array which is
+    --  passed into a function to get host address.
+    ----------------------------------------------------------------------------------------------------------------------*/
     public String getWifiIpAddress(Context context) {
         WifiManager wifiManager = (WifiManager) context.getSystemService(WIFI_SERVICE);
         int ipAddress = wifiManager.getConnectionInfo().getIpAddress();
@@ -128,7 +200,25 @@ public class GpsInfo extends Service implements LocationListener {
         return ipAddressString;
     }
 
-        //stop updating
+    /*------------------------------------------------------------------------------------------------------------------
+    -- Function: stopUsingGPS
+    --
+    -- DATE: March 9, 2016
+    --
+    -- REVISIONS: (Date and Description)
+    --
+    -- DESIGNER: Eunwon, Krystle, Oscar, Gabriel
+    --
+    -- PROGRAMMER: Eunwon Moon
+    --
+    -- INTERFACE: void stopUsingGPS()
+    --
+    -- RETURNS:   void
+    --
+    -- NOTES:
+    -- if the locationManager is not null, remove this context from location provider
+    --
+    ----------------------------------------------------------------------------------------------------------------------*/
     public void stopUsingGPS() {
         if (locManager != null) {
             if ( Build.VERSION.SDK_INT >= 23 &&
@@ -140,16 +230,76 @@ public class GpsInfo extends Service implements LocationListener {
             locManager.removeUpdates(GpsInfo.this);
         }
     }
+
+
+
+    /*------------------------------------------------------------------------------------------------------------------
+    -- Function: getNetwork
+    --
+    -- DATE: March 9, 2016
+    --
+    -- REVISIONS: (Date and Description)
+    --
+    -- DESIGNER: Eunwon, Krystle, Oscar, Gabriel
+    --
+    -- PROGRAMMER: Eunwon Moon
+    --
+    -- INTERFACE: boolean getNetwork()
+    --
+    -- RETURNS:   boolean
+    --                    -- return network connect information
+    --
+    -- NOTES:
+    -- return value which is showing if the network is working or not.
+    ----------------------------------------------------------------------------------------------------------------------*/
     public static boolean getNetwork(){
         return NetworkEnabled;
     }
-    //return current location
+
+    /*------------------------------------------------------------------------------------------------------------------
+    -- Function: getLatLng
+    --
+    -- DATE: March 9, 2016
+    --
+    -- REVISIONS: (Date and Description)
+    --
+    -- DESIGNER: Eunwon, Krystle, Oscar, Gabriel
+    --
+    -- PROGRAMMER: Eunwon Moon
+    --
+    -- INTERFACE:  Location getLatLng()
+    --
+    -- RETURNS:   Location
+    --                    -- return current location information
+    --
+    -- NOTES:
+    -- return value which is showing if the network is working or not.
+    ----------------------------------------------------------------------------------------------------------------------*/
     public Location getLatLng(){
         return mylocation;
     }
 
 
-    //open setting menu when the location service is off
+    /*------------------------------------------------------------------------------------------------------------------
+    -- Function: showSettingsAlert
+    --
+    -- DATE: March 9, 2016
+    --
+    -- REVISIONS: (Date and Description)
+    --
+    -- DESIGNER: Eunwon, Krystle, Oscar, Gabriel
+    --
+    -- PROGRAMMER: Eunwon Moon
+    --
+    -- INTERFACE:  void showSettingsAlert()
+    --
+    -- RETURNS:    void
+    --
+    -- NOTES:
+    -- display dialog to ask turnning on the Location setting.
+    -- If the user choose 'Cancel', stay there
+    -- Otherwise, move to Setting screen
+    ----------------------------------------------------------------------------------------------------------------------*/
     public void showSettingsAlert(){
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
 
@@ -176,19 +326,59 @@ public class GpsInfo extends Service implements LocationListener {
     }
 
 
-    public boolean isGetLocation(){
-        return this.GetLocationEnabled;
-    }
 
-
-    //update location every 1000ms(=MIN_TIME_UPDATES) or at least 1 m apart(MIN_DISTANCE_UPDATES)
+    /*------------------------------------------------------------------------------------------------------------------
+     -- Function: onLocationChanged
+     --
+     -- DATE: March 9, 2016
+     --
+     -- REVISIONS: (Date and Description)
+     --
+     -- DESIGNER: Eunwon, Krystle, Oscar, Gabriel
+     --
+     -- PROGRAMMER: Eunwon Moon
+     --
+     -- INTERFACE:  void onLocationChanged(Location location)
+     --
+     -- RETURNS:    void
+     --
+     -- NOTES:
+     -- This function is override LocationListener function.
+     -- It will be update depending on requestLodcationUpdates function call parameter.
+     -- This application will be update location information at least every 10 seconds,
+     -- and if the person move over 1 meters.
+     -- This new location information will be change global mlocation value.
+     --
+     ----------------------------------------------------------------------------------------------------------------------*/
     @Override
     public void onLocationChanged(Location location) {
         mylocation = location;
     }
 
 
-
+    /*------------------------------------------------------------------------------------------------------------------
+    -- Function: onStatusChanged
+    --
+    -- DATE: March 9, 2016
+    --
+    -- REVISIONS: (Date and Description)
+    --
+    -- DESIGNER: Eunwon, Krystle, Oscar, Gabriel
+    --
+    -- PROGRAMMER: Eunwon Moon
+    --
+    -- INTERFACE:  void onLocationChanged(Location location)
+    --
+    -- RETURNS:    void
+    --
+    -- NOTES:
+    -- This function is override LocationListener function.
+    -- It will be update depending on requestLodcationUpdates function call parameter.
+    -- This application will be update location information at least every 3 seconds,
+    -- and if the person move over 2 meters.
+    -- This new location information will be change global mlocation value.
+    --
+    ----------------------------------------------------------------------------------------------------------------------*/
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
         switch (status) {

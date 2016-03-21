@@ -9,9 +9,31 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
-/**
- * Created by moongom on 3/10/2016.
- */
+/*------------------------------------------------------------------------------------------------------------------
+-- SOURCE FILE: Network.java
+--
+-- PROGRAM: AndroidGpsTrack
+--
+-- FUNCTIONS:
+-- void connect ()
+-- void send(String lat, String lng, String name, String ipAddress)
+-- String createPacket(String lat, String lng, String name, String ipAddress)
+--
+--
+-- DATE: March 16, 2016
+--
+-- REVISIONS: March 18, 2016 - add fuction for SQL Query
+--
+-- DESIGNER:  Eunwon, Krystle, Oscar, Gabriel
+--
+-- PROGRAMMER: Eunwon Moon
+--
+-- NOTES: This program is used to connect client to web server.
+--	Use UDP socket to communicate with server.
+--  Open server and received value from LocationActivity and create SQL query
+--  as a String type, and send after making DatagramPacket
+--
+----------------------------------------------------------------------------------------------------------------------*/
 public class Network {
     static final int DgramSize = 1024;
     String ServerName;
@@ -29,7 +51,26 @@ public class Network {
         this.ServerPort = port;
     }
 
-    //setup connection and prepare to send.
+    /*------------------------------------------------------------------------------------------------------------------
+    -- Function: connect
+    --
+    -- DATE: March 16, 2016
+    --
+    -- REVISIONS: (Date and Description)
+    --
+    -- DESIGNER: Eunwon, Krystle, Oscar, Gabriel
+    --
+    -- PROGRAMMER: Eunwon Moon
+    --
+    -- INTERFACE: void getLocation()
+    --
+    -- RETURNS:   void
+    --
+    -- NOTES:
+    --   This function is to connect server through UDP socket.
+    --   Using IP and socket input value, create socket and intialize bytestream packet data.
+    --
+    ----------------------------------------------------------------------------------------------------------------------*/
     public void connect ()
     {
 
@@ -49,7 +90,31 @@ public class Network {
 
     }
 
-    //Packetize and Send;
+    /*------------------------------------------------------------------------------------------------------------------
+    -- Function: send
+    --
+    -- DATE: March 16, 2016
+    --
+    -- REVISIONS: (Date and Description)
+    --
+    -- DESIGNER: Eunwon, Krystle, Oscar, Gabriel
+    --
+    -- PROGRAMMER: Eunwon Moon
+    --
+    -- INTERFACE: void send(String lat, String lng, String name, String ipAddress)
+    --					String lat  : latitude value
+    --					String lng	: longitude value
+    --					String name : user name
+    --					String ipAddress : user device ip address
+    --
+    -- RETURNS:   void
+    --
+    -- NOTES:
+    --  This function is to send data to server.
+    --  using input variables, get sql query using createPacket function.
+    --  convert string to Byte type and make Datagram Packet using byte data and Server information.
+    --  semd datagram using clientSocket --
+    ----------------------------------------------------------------------------------------------------------------------*/
     public void send(String lat, String lng, String name, String ipAddress) {
         ClientString = createPacket(lat, lng, name, ipAddress);
         System.arraycopy(ClientString.getBytes(), 0, PacketData, 0, ClientString.length());
@@ -69,7 +134,29 @@ public class Network {
         }
     }
 
-    //create packet and call
+    /*------------------------------------------------------------------------------------------------------------------
+    -- Function: createPacket
+    --
+    -- DATE: March 9, 2016
+    --
+    -- REVISIONS: (Date and Description)
+    --
+    -- DESIGNER: Eunwon, Krystle, Oscar, Gabriel
+    --
+    -- PROGRAMMER: Eunwon Moon
+    --
+    -- INTERFACE: String createPacket(String lat, String lng, String name, String ipAddress)
+    --					String lat  : latitude value
+    --					String lng	: longitude value
+    --					String name : user name
+    --					String ipAddress : user device ip address
+    --
+    -- RETURNS:   String
+    --                    -- return SqlQuery type string
+    --
+    -- NOTES:
+    --   This function is make a String which form is like SQL query using parameters.--
+    ----------------------------------------------------------------------------------------------------------------------*/
     public String createPacket(String lat, String lng, String name, String ipAddress){
        return new String("INSERT INTO `markers`(`name`, `lat`, `lng`, `ip`) VALUES ('"+name+"',"+lat+","+lng+",'"+ipAddress+"');");
     }

@@ -1,5 +1,4 @@
 package com.datacomm.gpstrack;
-
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,6 +9,32 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.regex.Pattern;
+/*------------------------------------------------------------------------------------------------------------------
+-- SOURCE FILE: MainActivity.java
+--
+-- PROGRAM: AndroidGpsTrack
+--
+-- FUNCTIONS:
+-- void daemonize (void)
+-- int initialize_inotify_watch (int fd, char pathname[MAXPATHLEN])
+-- int ProcessFiles (char pathname[MAXPATHLEN])
+-- unsigned int GetProcessID (char *process)
+--
+--
+-- DATE: March 15, 2016
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER:  Eunwon Moon
+--
+-- PROGRAMMER: Eunwon Moon
+--
+-- NOTES: This program will be first page of android application
+--        Initialize EditText and Button in xml file and get user input value
+--      which are name, server ip address and port number.
+--      check each value and pass to locationActivity.
+--
+----------------------------------------------------------------------------------------------------------------------*/
 
 public class MainActivity extends AppCompatActivity {
     private static final Pattern PATTERN = Pattern.compile(
@@ -22,8 +47,25 @@ public class MainActivity extends AppCompatActivity {
     Button mapBtn;
 
 
-
-    @Override
+    /*------------------------------------------------------------------------------------------------------------------
+    -- FUNCTION: onCreate
+    --
+    -- DATE: March 15, 2016
+    --
+    -- REVISIONS: (Date and Description)
+    --
+    -- DESIGNER: Eunwon Moon
+    --
+    -- PROGRAMMER: Eunwon Moon
+    --
+    -- INTERFACE: void init();
+    --
+    -- RETURNS: void
+    --
+    -- NOTES:
+    -- This function is used to show xml file.
+    ----------------------------------------------------------------------------------------------------------------------*/
+   @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -32,6 +74,27 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+    /*------------------------------------------------------------------------------------------------------------------
+    -- FUNCTION: init
+    --
+    -- DATE: March 15, 2016
+    --
+    -- REVISIONS: (Date and Description)
+    --
+    -- DESIGNER: Eunwon Moon
+    --
+    -- PROGRAMMER: Eunwon Moon
+    --
+    -- INTERFACE: boolean checkInput()
+    --
+    -- RETURNS: void
+    --
+    -- NOTES:
+    -- This function is used to initialize EditText, TextView, and Button
+    -- in xml to get a values. Also set up button action to get value.
+    -- If all input is valid, connect to location screen.
+    --
+    ----------------------------------------------------------------------------------------------------------------------*/
     public void init(){
 
         nameEdit = (EditText)findViewById(R.id.eName);
@@ -60,6 +123,28 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
+    /*------------------------------------------------------------------------------------------------------------------
+    -- FUNCTION: checkInput
+    --
+    -- DATE: March 8, 2016
+    --
+    -- REVISIONS: (Date and Description)
+    --
+    -- DESIGNER: Eunwon Moon
+    --
+    -- PROGRAMMER: Eunwon Moon
+    --
+    -- RETURNS: boolean - check if all input value is valid or not
+    --
+    -- INTERFACE: boolean validate(String ip)
+    --                  ip: ip address input in string type
+    --
+    -- NOTES:
+    -- This function is used to check input value.
+    -- get name, ip, and port number first. and check if there is empty space
+    -- and compare ip address to regular expression pattern using valid function.
+    ----------------------------------------------------------------------------------------------------------------------*/
     private boolean checkInput(){
         nameStr = nameEdit.getText().toString();
         ipStr = ipEdit.getText().toString();
@@ -90,7 +175,24 @@ public class MainActivity extends AppCompatActivity {
         }
         return true;
     }
-
+    /*------------------------------------------------------------------------------------------------------------------
+    -- FUNCTION: Validate
+    --
+    -- DATE: March 8, 2016
+    --
+    -- REVISIONS: (Date and Description)
+    --
+    -- DESIGNER: Eunwon Moon
+    --
+    -- PROGRAMMER: Eunwon Moon
+    --
+    -- RETURNS: boolean - check if all input value is valid or not
+    --
+    -- INTERFACE: boolean validate(String ip)
+    --                ip: ip address input to compare
+    -- NOTES:
+    -- compare IP address format pattern to ip input.
+    ----------------------------------------------------------------------------------------------------------------------*/
     public static boolean validate(final String ip) {
         return PATTERN.matcher(ip).matches();
     }
