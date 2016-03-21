@@ -23,7 +23,9 @@ $userRow=mysql_fetch_array($res);
         <link href="css/the-big-picture.css" rel="stylesheet">
 
         <link href="css/component.css" rel="stylesheet">
-        
+
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.2.0/animate.min.css">
+
         <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.12.0.min.js"></script>
 
         <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
@@ -101,10 +103,10 @@ $userRow=mysql_fetch_array($res);
                 // For more options see: https://developers.google.com/maps/documentation/javascript/reference#MapOptions
                 var mapOptions = {
                     // How zoomed in you want the map to start at (always required)
-                    zoom: 11,
+                    zoom: 18,
 
                     // The latitude and longitude to center the map (always required)
-                    center: new google.maps.LatLng(49.2827, -123.1207), // New York
+                    center: new google.maps.LatLng(49.249820, -123.001662), // New York
 
                     // How you would like to style the map. 
                     // This is where you would paste any style found on Snazzy Maps.
@@ -131,7 +133,7 @@ $userRow=mysql_fetch_array($res);
                         parseFloat(markers[i].getAttribute("lat")),
                         parseFloat(markers[i].getAttribute("lng")));
                     var html = "<b>" + name + "</b> <br/>" + address;
-                    var icon = customIcons[type] || {};
+                    var icon = customIcons[name] || {};
 
                     var marker = new google.maps.Marker({
                       map: map,
@@ -154,15 +156,47 @@ $userRow=mysql_fetch_array($res);
         }
 
         </script>
-
             <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+    <style>
+     #btn-close-modal {
+        width:100%;
+        text-align: right;
+        padding: 10px;
+        cursor:pointer;
+        color:#fff;
+    }
+    </style>
     </head>
     <body class = "container-fluid" onload="init()">
+
+        <!--DEMO01-->
+        <div id="animatedModal">
+            <!--THIS IS IMPORTANT! to close the modal, the class name has to match the name given on the ID -->
+            <div id="btn-close-modal" class="close-animatedModal"> 
+                <img src = "img/closebt.svg">
+            </div>
+                
+            <div class="modal-content" style = "font-size: 30px; text-align: center;">
+                <!--Your modal content goes here-->
+                <h1>Users</h1>
+                <?php
+                    $query = "SELECT * FROM users";
+                    $result = mysql_query($query);
+                    if (!$result) {
+                      die('Invalid query: ' . mysql_error());
+                    }
+
+                    while ($row = mysql_fetch_array($result)) {
+                        echo '<li>' . $row['user_name'] . '</li>';
+                    }
+                ?>
+            </div>
+        </div>
 
         <!-- Navigation -->
         <nav class="navbar navbar-inverse navbar-fixed-bottom" role="navigation">
@@ -181,10 +215,10 @@ $userRow=mysql_fetch_array($res);
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav">
                         <li>
-                            <a href="#" class="md-trigger" data-modal="modal-1">Users : <?php echo $userRow['user_name']; ?></a>
+                            <a id="demo01" href="#animatedModal">Users : <?php echo $userRow['user_name']; ?></a>
                         </li>
                         <li>
-                            <a href="#">Info</a>
+                            <a id="demo02" href="#animatedModal">Info</a>
                         </li>
                         <li>
                             <a href="logout.php?logout">Sign Out</a>
@@ -223,8 +257,13 @@ $userRow=mysql_fetch_array($res);
         </div>
         <!-- jQuery -->
         <script src="js/jquery.js"></script>
+        <script src="js/animatedModal.js"></script>
 
         <!-- Bootstrap Core JavaScript -->
         <script src="js/bootstrap.min.js"></script>
+
+        <script>
+          $("#demo01").animatedModal();
+        </script>
     </body>
 </html>
