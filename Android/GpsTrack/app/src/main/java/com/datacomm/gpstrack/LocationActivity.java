@@ -18,8 +18,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-
-
 public class LocationActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
@@ -31,6 +29,8 @@ public class LocationActivity extends FragmentActivity implements OnMapReadyCall
     int portNum;
     Location prevLoc;
     Network socketNtw;
+    String ipAddress;
+    GpsInfo gpsInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,19 +42,18 @@ public class LocationActivity extends FragmentActivity implements OnMapReadyCall
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         initVal();
-
-
     }
 
 
     //initialize xml file view and button work
     public void initVal()  {
-
+        gpsInfo = new GpsInfo(getApplicationContext());
         //get input value from main page
         Intent i = getIntent();
         CltName = i.getStringExtra("name");
         serverIp = i.getStringExtra("ip");
         portNum = i.getIntExtra("port", 51234);
+        ipAddress = gpsInfo.getWifiIpAddress(getApplicationContext());
 
         socketNtw = new Network(serverIp, portNum);
 
@@ -167,14 +166,9 @@ public class LocationActivity extends FragmentActivity implements OnMapReadyCall
 
                         String latStr = String.format("%.5f", curLoc.getLatitude());
                         String lngStr = String.format("%.5f", curLoc.getLongitude());
-/*
-                        String latStr = Double.toString(curLoc.getLatitude());
-                        String lngStr = Double.toString(curLoc.getLongitude());
-*/
-                        //send locationvariable to onProgressUpdate
+
                         publishProgress(curLoc);
-                       // if(GpsInfo.getNetwork())
-                            socketNtw.send(latStr, lngStr, CltName);
+                        socketNtw.send(latStr, lngStr, CltName, ipAddress);
                         prevLoc = curLoc;
                     }
                     else {

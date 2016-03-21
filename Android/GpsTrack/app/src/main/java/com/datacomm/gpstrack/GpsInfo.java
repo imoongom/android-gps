@@ -11,6 +11,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.LocationProvider;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -21,6 +22,10 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.math.BigInteger;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.nio.ByteOrder;
 
 
 public class GpsInfo extends Service implements LocationListener {
@@ -33,9 +38,6 @@ public class GpsInfo extends Service implements LocationListener {
     boolean GetLocationEnabled = false;
 
     private Location mylocation;
-
-
-
 
     protected LocationManager locManager = null;
 
@@ -105,8 +107,28 @@ public class GpsInfo extends Service implements LocationListener {
         }
     }
 
+    public String getWifiIpAddress(Context context) {
+        WifiManager wifiManager = (WifiManager) context.getSystemService(WIFI_SERVICE);
+        int ipAddress = wifiManager.getConnectionInfo().getIpAddress();
 
-    //stop updating
+        if (ByteOrder.nativeOrder().equals(ByteOrder.LITTLE_ENDIAN)) {
+            ipAddress = Integer.reverseBytes(ipAddress);
+        }
+
+        byte[] ipByteArray = BigInteger.valueOf(ipAddress).toByteArray();
+
+        String ipAddressString;
+        try {
+            ipAddressString = InetAddress.getByAddress(ipByteArray).getHostAddress();
+        } catch (UnknownHostException ex) {
+            Log.e("WIFIIP", "Unable to get host address.");
+            ipAddressString = null;
+        }
+        Log.d("client IP", ipAddressString);
+        return ipAddressString;
+    }
+
+        //stop updating
     public void stopUsingGPS() {
         if (locManager != null) {
             if ( Build.VERSION.SDK_INT >= 23 &&
