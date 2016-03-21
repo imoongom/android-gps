@@ -126,14 +126,16 @@ $userRow=mysql_fetch_array($res);
                   var xml = data.responseXML;
                   var markers = xml.documentElement.getElementsByTagName("marker");
                   for (var i = 0; i < markers.length; i++) {
+					var timestamp = markers[i].getAttribute("id");
                     var name = markers[i].getAttribute("name");
                     var colour = markers[i].getAttribute("colour");
                     var address = markers[i].getAttribute("address");
                     var type = markers[i].getAttribute("type");
+					var ip = markers[i].getAttribute("ip");
                     var point = new google.maps.LatLng(
                         parseFloat(markers[i].getAttribute("lat")),
                         parseFloat(markers[i].getAttribute("lng")));
-                    var html = "<b>" + name + "</b> <br/>" + address;
+                    var html = "<b>" + name + "</b> <br/>" + timestamp;
                     //var icon = customIcons[type] || {};
                     var icons = {};
                     icons["red"] = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png';
@@ -201,6 +203,29 @@ $userRow=mysql_fetch_array($res);
                     }
                 ?>
             </div>
+			<div class="modal-content" style = "font-size: 30px; text-align: center;">
+                <!--Your modal content goes here-->
+                <h1>Information</h1>
+                <?php
+                    $query = "SELECT * FROM markers";
+                    $result = mysql_query($query);
+                    if (!$result) {
+                      die('Invalid query: ' . mysql_error());
+                    }
+
+					echo '<table style = "text-align:center">';
+                    while ($row = mysql_fetch_array($result)) {
+						echo '<tr>';
+                        echo '<td>' . $row['id'] . '</td>';
+						echo '<td>' . $row['name'] . '</td>';
+                        echo '<td>' . $row['lat'] . '</td>';
+                        echo '<td>' . $row['lng'] . '</td>';
+						echo '<td>' . $row['ip'] . '</td>';
+						echo '</tr>';
+                    }
+					echo '</table>';
+                ?>
+            </div>
         </div>
 
         <!-- Navigation -->
@@ -214,16 +239,13 @@ $userRow=mysql_fetch_array($res);
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="#">Android GPS Tracker</a>
+                    <a class="navbar-brand" href="#">Android GPS Tracker | <?php echo $userRow['user_name']; ?></a>
                 </div>
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav">
                         <li>
-                            <a id="demo01" href="#animatedModal">Users : <?php echo $userRow['user_name']; ?></a>
-                        </li>
-                        <li>
-                            <a id="demo02" href="#animatedModal">Info</a>
+                            <a id="demo01" href="#animatedModal">Information</a>
                         </li>
                         <li>
                             <a href="logout.php?logout">Sign Out</a>
