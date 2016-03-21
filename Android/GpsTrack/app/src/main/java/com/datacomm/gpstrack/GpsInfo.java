@@ -23,9 +23,13 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.math.BigInteger;
+import java.net.Inet4Address;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.nio.ByteOrder;
+import java.util.Enumeration;
 
 /*------------------------------------------------------------------------------------------------------------------
 -- SOURCE FILE: GpsInfo.java
@@ -178,6 +182,7 @@ public class GpsInfo extends Service implements LocationListener {
     --  This function is used to get Wifi IP address.
     --  Get ip address using wifiManager, and convert its into a byte array which is
     --  passed into a function to get host address.
+    --  If there is null value of IP address, check IP using network provider
     ----------------------------------------------------------------------------------------------------------------------*/
     public String getWifiIpAddress(Context context) {
         WifiManager wifiManager = (WifiManager) context.getSystemService(WIFI_SERVICE);
@@ -196,10 +201,55 @@ public class GpsInfo extends Service implements LocationListener {
             Log.e("WIFIIP", "Unable to get host address.");
             ipAddressString = null;
         }
+
+        if(ipAddressString == null){
+            ipAddressString = GetNetworkIpAddress();
+        }
+        if(ipAddressString == null){
+            Toast.makeText(mContext, "INTERNET NOT CONNECTED!",Toast.LENGTH_LONG);
+            return "Internet Not Connected";
+        }
         Log.d("client IP", ipAddressString);
         return ipAddressString;
     }
+    /*------------------------------------------------------------------------------------------------------------------
+    -- Function: GetNetworkIpAddress
+    --
+    -- DATE: March 19, 2016
+    --
+    -- REVISIONS: (Date and Description)
+    --
+    -- DESIGNER: Eunwon, Krystle, Oscar, Gabriel
+    --
+    -- PROGRAMMER: Krystle Bulalakaw
+    --
+    -- INTERFACE: String GetNetworkIpAddress()
+    --
+    -- RETURNS:   String
+    --                    -- return this device network IP address
+    --
+    -- NOTES:
+    --  This function is used to get ip address using network providers.
+    ----------------------------------------------------------------------------------------------------------------------*/
+    private String GetNetworkIpAddress(){
+        try{
+            for (Enumeration en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
+                NetworkInterface intf = ( NetworkInterface ) en.nextElement();
+                for (Enumeration enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
+                    InetAddress inetAddress = ( InetAddress ) enumIpAddr.nextElement();
+                    if (!inetAddress.isLoopbackAddress()) {
+                        if (inetAddress instanceof Inet4Address)
+                           return inetAddress.getHostAddress().toString();
 
+                        break;
+                    }
+                }
+            }
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
     /*------------------------------------------------------------------------------------------------------------------
     -- Function: stopUsingGPS
     --
