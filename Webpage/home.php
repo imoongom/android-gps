@@ -1,3 +1,15 @@
+<?php
+session_start();
+include_once 'dbconnect.php';
+
+if(!isset($_SESSION['user']))
+{
+	header("Location: index.php");
+}
+$res=mysql_query("SELECT * FROM users WHERE user_id=".$_SESSION['user']);
+$userRow=mysql_fetch_array($res);
+?>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -10,10 +22,14 @@
         <!-- Custom CSS -->
         <link href="css/the-big-picture.css" rel="stylesheet">
 
+        <link href="css/component.css" rel="stylesheet">
+        
         <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.12.0.min.js"></script>
 
         <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
 
+        <script src="js/classie.js"></script>
+        <script src="js/modalEffects.js"></script>
 
         <style type="text/css">
            
@@ -116,11 +132,14 @@
                         parseFloat(markers[i].getAttribute("lng")));
                     var html = "<b>" + name + "</b> <br/>" + address;
                     var icon = customIcons[type] || {};
+
                     var marker = new google.maps.Marker({
                       map: map,
                       position: point,
                       icon: icon.icon
                     });
+
+
                     bindInfoWindow(marker, map, infoWindow, html);
                   }
                 });
@@ -145,7 +164,7 @@
     </head>
     <body class = "container-fluid" onload="init()">
 
-          <!-- Navigation -->
+        <!-- Navigation -->
         <nav class="navbar navbar-inverse navbar-fixed-bottom" role="navigation">
             <div class="container-fluid">
                 <!-- Brand and toggle get grouped for better mobile display -->
@@ -162,10 +181,13 @@
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav">
                         <li>
-                            <a href="#">Users</a>
+                            <a href="#" class="md-trigger" data-modal="modal-1">Users : <?php echo $userRow['user_name']; ?></a>
                         </li>
                         <li>
                             <a href="#">Info</a>
+                        </li>
+                        <li>
+                            <a href="logout.php?logout">Sign Out</a>
                         </li>
                     </ul>
                 </div>
@@ -184,6 +206,21 @@
             <!-- /.row -->
         </div>
         <!-- /.container -->
+
+        <div class="md-modal md-effect-1" id="modal-1">
+            <div class="md-content">
+                <h3>Modal Dialog</h3>
+                <div>
+                    <p>This is a modal window. You can do the following things with it:</p>
+                    <ul>
+                        <li><strong>Read:</strong> Modal windows will probably tell you something important so don't forget to read what it says.</li>
+                        <li><strong>Look:</strong> modal windows enjoy a certain kind of attention; just look at it and appreciate its presence.</li>
+                        <li><strong>Close:</strong> click on the button below to close the modal.</li>
+                    </ul>
+                    <button class="md-close">Close me!</button>
+                </div>
+            </div>
+        </div>
         <!-- jQuery -->
         <script src="js/jquery.js"></script>
 
